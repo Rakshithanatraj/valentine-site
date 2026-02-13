@@ -65,6 +65,17 @@
       box-shadow: 0 20px 60px rgba(0,0,0,.12);
       overflow: hidden;
     }
+    .valentine-image {
+  margin: 12px 0 18px;
+  text-align: center;
+}
+
+.valentine-image img {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
 
     .badge{
       display:inline-flex;
@@ -192,10 +203,12 @@
 
     <div class="badge">💌 <span id="toName">Hey you</span>… I have a question</div>
 
-    <h1>Will you be my Valentine? ❤️</h1>
-    <p id="subtext">
-      I made you this tiny page because asking you like this felt more fun.
-    </p>
+    <h1>Will you be my Valentine Sakshath? ❤️</h1>
+
+    <div class="valentine-image">
+      <img src="baby.jpg" alt="Cute surprise" />
+    </div>
+    
 
     <div class="row" id="btnRow">
       <button class="yes" id="yesBtn">Yes 😍</button>
@@ -339,4 +352,5 @@ noBtn.addEventListener("click", (e) => {
   </script>
 </body>
 </html>
+
 
