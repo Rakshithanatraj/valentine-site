@@ -184,6 +184,10 @@
   </style>
 </head>
 <body>
+
+  <audio id="bgm"  preload="auto" loop playsinline>
+  <source src="song.mp3" type="audio/mp3">
+</audio>
   <!-- Hearts -->
   <script>
     // create floating hearts background
@@ -198,9 +202,7 @@
     }
   </script>
 
-  <audio id="bgm" loop>
-  <source src="song.mp3" type="audio/mp3">
-</audio>
+  
 
   <div class="card" id="card">
     <div class="confetti" id="confetti"></div>
@@ -355,34 +357,37 @@ noBtn.addEventListener("click", (e) => {
 // Start music on first touch/click
 // ------------------------------
 
-const audio = document.getElementById("bgm");
+// Start music on first interaction (mobile + desktop)
+window.addEventListener("load", () => {
+  const bgm = document.getElementById("bgm");
+  if (!bgm) return;
 
-function startMusicOnce() {
-  audio.volume = 0;  // start silent for smooth fade
-  audio.play().then(() => {
-    // soft fade in
-    let fade = setInterval(() => {
-      if (audio.volume < 0.5) {
-        audio.volume += 0.02;
-      } else {
-        clearInterval(fade);
-      }
-    }, 200);
-  }).catch(() => {});
+  function startMusicOnce() {
+    bgm.volume = 0.0;
+    bgm.play().then(() => {
+      // fade in
+      const target = 0.5;
+      const step = 0.02;
+      const interval = setInterval(() => {
+        bgm.volume = Math.min(target, bgm.volume + step);
+        if (bgm.volume >= target) clearInterval(interval);
+      }, 150);
+    }).catch((err) => {
+      // If this logs, it's usually a missing file or autoplay restriction
+      console.log("Music play blocked or file missing:", err);
+    });
+  }
 
-  // Remove listeners so it only plays once
-  document.removeEventListener("click", startMusicOnce);
-  document.removeEventListener("touchstart", startMusicOnce);
-}
+  // pointerdown works for touch + mouse + stylus
+  document.addEventListener("pointerdown", startMusicOnce, { once: true });
+});
 
-// Listen for first interaction
-document.addEventListener("click", startMusicOnce);
-document.addEventListener("touchstart", startMusicOnce);
 
     
   </script>
 </body>
 </html>
+
 
 
 
