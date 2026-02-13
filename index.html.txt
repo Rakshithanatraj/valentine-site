@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Be My Valentine 💌</title>
+  <meta name="description" content="A tiny Valentine invite." />
+  <style>
+    :root{
+      --bg1:#fff1f6;
+      --bg2:#ffe4ec;
+      --card:#ffffffcc;
+      --text:#2b2b2b;
+      --accent:#ff2d6f;
+      --accent2:#7c3aed;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      display:grid;
+      place-items:center;
+      background: radial-gradient(1200px 600px at 20% 10%, var(--bg2), transparent),
+                  radial-gradient(900px 500px at 90% 30%, #e9d5ff, transparent),
+                  linear-gradient(135deg, var(--bg1), #fff);
+      overflow:hidden;
+      padding:24px;
+    }
+
+    /* Floating hearts background */
+    .heart{
+      position:absolute;
+      width:14px; height:14px;
+      background: var(--accent);
+      transform: rotate(45deg);
+      opacity:.22;
+      animation: floatUp 10s linear infinite;
+      border-radius:3px;
+    }
+    .heart::before,.heart::after{
+      content:"";
+      position:absolute;
+      width:14px;height:14px;
+      background: var(--accent);
+      border-radius:50%;
+    }
+    .heart::before{ left:-7px; top:0; }
+    .heart::after { top:-7px; left:0; }
+
+    @keyframes floatUp{
+      from{ transform: translateY(120vh) rotate(45deg); }
+      to  { transform: translateY(-20vh) rotate(45deg); }
+    }
+
+    .card{
+      width:min(560px, 100%);
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid #ffffffaa;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.12);
+      position:relative;
+    }
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 12px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid #00000010;
+      font-size:13px;
+    }
+    h1{
+      margin:14px 0 8px;
+      font-size: clamp(28px, 4vw, 38px);
+      line-height:1.1;
+    }
+    p{ margin:0 0 18px; font-size:16px; line-height:1.6; opacity:.9; }
+
+    .row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+      align-items:center;
+    }
+    button{
+      border:0;
+      padding:12px 16px;
+      border-radius:14px;
+      font-size:16px;
+      cursor:pointer;
+      transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
+      user-select:none;
+    }
+    button:active{ transform: translateY(1px); }
+    .yes{
+      background: linear-gradient(135deg, var(--accent), #ff6aa2);
+      color:white;
+      box-shadow: 0 10px 24px rgba(255,45,111,.35);
+      min-width: 140px;
+    }
+    .yes:hover{ box-shadow: 0 14px 34px rgba(255,45,111,.45); }
+    .no{
+      background:#fff;
+      border:1px solid #00000014;
+      color:#333;
+    }
+    .no:hover{ background:#fff7fa; }
+
+    .message{
+      margin-top:18px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#ffffff;
+      border:1px dashed #00000018;
+      display:none;
+    }
+    .message strong{ color: var(--accent2); }
+
+    .tiny{
+      margin-top:14px;
+      font-size:12px;
+      opacity:.65;
+    }
+
+    /* Confetti */
+    .confetti{
+      position:absolute;
+      inset:-20px;
+      pointer-events:none;
+      overflow:hidden;
+      border-radius:24px;
+      display:none;
+    }
+    .confetti i{
+      position:absolute;
+      top:-10px;
+      width:10px;
+      height:16px;
+      opacity:.9;
+      animation: fall 1.9s ease-in infinite;
+      transform: translateY(-20px) rotate(0deg);
+      border-radius:2px;
+    }
+    @keyframes fall{
+      to{ transform: translateY(520px) rotate(720deg); opacity:1; }
+    }
+
+    .footer{
+      margin-top:18px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:12px;
+      opacity:.7;
+    }
+    a{ color: var(--accent2); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <!-- Hearts -->
+  <script>
+    // create floating hearts background
+    for (let i=0; i<18; i++){
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.style.left = Math.random()*100 + 'vw';
+      h.style.animationDuration = (7 + Math.random()*8) + 's';
+      h.style.animationDelay = (-Math.random()*10) + 's';
+      h.style.transform = `rotate(45deg) scale(${0.8 + Math.random()*1.6})`;
+      document.body.appendChild(h);
+    }
+  </script>
+
+  <div class="card" id="card">
+    <div class="confetti" id="confetti"></div>
+
+    <div class="badge">💌 <span id="toName">Hey you</span>… I have a question</div>
+
+    <h1>Will you be my Valentine? ❤️</h1>
+    <p id="subtext">
+      I made you this tiny page because asking you like this felt more fun.
+    </p>
+
+    <div class="row">
+      <button class="yes" id="yesBtn">Yes 😍</button>
+      <button class="no" id="noBtn">No 🙈</button>
+    </div>
+
+    <div class="message" id="msg"></div>
+
+    <div class="footer">
+      <span>Made with love ✨</span>
+      <span><a href="#" id="copyLink">Copy this page link</a></span>
+    </div>
+
+    <div class="tiny">
+      Tip: You can personalize the name by using a link like:
+      <code>?name=HisName</code>
+    </div>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn  = document.getElementById('noBtn');
+    const msg    = document.getElementById('msg');
+    const conf   = document.getElementById('confetti');
+    const toName = document.getElementById('toName');
+    const copyLink = document.getElementById('copyLink');
+
+    // Personalize via URL: ?name=Rahul
+    const params = new URLSearchParams(location.search);
+    const name = params.get('name');
+    if (name) toName.textContent = name;
+
+    function showMessage(html){
+      msg.style.display = 'block';
+      msg.innerHTML = html;
+    }
+
+    function makeConfetti(){
+      conf.innerHTML = '';
+      conf.style.display = 'block';
+      const colors = ['#ff2d6f','#ffb703','#8ecae6','#7c3aed','#34d399','#fb7185'];
+      for (let i=0; i<80; i++){
+        const piece = document.createElement('i');
+        piece.style.left = Math.random()*100 + '%';
+        piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+        piece.style.animationDelay = (Math.random()*0.7) + 's';
+        piece.style.animationDuration = (1.2 + Math.random()*1.2) + 's';
+        piece.style.transform = `translateY(-20px) rotate(${Math.random()*180}deg)`;
+        piece.style.width = (6 + Math.random()*8) + 'px';
+        piece.style.height = (10 + Math.random()*14) + 'px';
+        conf.appendChild(piece);
+      }
+      // auto-hide after a bit
+      setTimeout(()=> conf.style.display='none', 2500);
+    }
+
+    yesBtn.addEventListener('click', () => {
+      makeConfetti();
+      showMessage(`
+        <strong>Yay!!!</strong> 🥰<br><br>
+        Okay it’s official — you’re my Valentine 💖<br>
+        <em>Tell me when you’re free and I’ll plan something special.</em>
+      `);
+    });
+
+    const noLines = [
+      "Are you sure? 🥺",
+      "Think again… I brought snacks 😄",
+      "Okay but what if I ask with extra love? 💗",
+      "Plot twist: the 'No' button is shy 🙈"
+    ];
+    let noCount = 0;
+
+    noBtn.addEventListener('click', () => {
+      noCount++;
+      const line = noLines[Math.min(noCount-1, noLines.length-1)];
+      showMessage(`${line}<br><br>(Try pressing <strong>Yes</strong> 😌)`);
+      // playful: make YES button slightly bigger each time
+      const scale = 1 + Math.min(noCount*0.08, 0.45);
+      yesBtn.style.transform = `scale(${scale})`;
+    });
+
+    copyLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try{
+        await navigator.clipboard.writeText(location.href);
+        showMessage("Link copied ✅ Now paste it into your email 💌");
+      }catch{
+        showMessage("Couldn’t auto-copy on this browser 😅 Just copy from the address bar.");
+      }
+    });
+  </script>
+</body>
+</html>
