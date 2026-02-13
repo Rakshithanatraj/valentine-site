@@ -280,47 +280,46 @@
 
     function moveNoButton(){
       const cardRect = card.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
 
-      // Keep it comfortably inside (extra padding helps on mobile)
-      const padX = 18;
-      const padY = 22;
+  const padding = 20;
 
-      const maxX = Math.max(padX, cardRect.width  - btnRect.width  - padX);
-      const maxY = Math.max(padY, cardRect.height - btnRect.height - padY);
+  const maxX = cardRect.width - btnRect.width - padding;
+  const maxY = cardRect.height - btnRect.height - padding;
 
-      const randomX = padX + Math.random() * (maxX - padX);
-      const randomY = padY + Math.random() * (maxY - padY);
+  const randomX = Math.random() * maxX;
+  const randomY = Math.random() * maxY;
 
-      noBtn.style.left = randomX + "px";
-      noBtn.style.top  = randomY + "px";
-
-      // Optional: tease message once in a while
-      showMessage(`Nice try 😌<br><br>(There’s only one correct answer: <strong>Yes</strong> 💗)`);
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top  = randomY + "px";
     }
 
-    // Initialize after layout paints
-    window.addEventListener('load', () => {
-      initNoButtonPosition();
-    });
+    // Wait for layout to stabilize
+window.addEventListener("load", () => {
+  noBtn.style.position = "absolute";
 
-    // Desktop: runs on hover
-    noBtn.addEventListener("mouseenter", (e) => {
-      e.preventDefault();
-      moveNoButton();
-    });
+  // Place it initially near its original location
+  const rect = noBtn.getBoundingClientRect();
+  const cardRect = card.getBoundingClientRect();
 
-    // Mobile: runs on touch
-    noBtn.addEventListener("touchstart", (e) => {
-      e.preventDefault(); // prevents the click from registering
-      moveNoButton();
-    }, {passive:false});
+  noBtn.style.left = (rect.left - cardRect.left) + "px";
+  noBtn.style.top  = (rect.top - cardRect.top) + "px";
+});
 
-    // Safety: runs on click too
-    noBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      moveNoButton();
-    });
+// Desktop
+noBtn.addEventListener("mouseenter", moveNoButton);
+
+// Mobile
+noBtn.addEventListener("touchstart", function(e){
+  e.preventDefault();
+  moveNoButton();
+}, {passive:false});
+
+// Safety click
+noBtn.addEventListener("click", function(e){
+  e.preventDefault();
+  moveNoButton();
+});
 
     copyLink.addEventListener('click', async (e) => {
       e.preventDefault();
