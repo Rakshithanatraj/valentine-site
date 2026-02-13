@@ -186,7 +186,7 @@
 <body>
 
   <audio id="bgm"  preload="auto" loop playsinline>
-  <source src="song.mp3" type="audio/mpeg">
+  <source src="Munbe_Vaa_first_30_seconds.mp3" type="audio/mpeg">
 </audio>
   <!-- Hearts -->
   <script>
@@ -211,8 +211,8 @@
 
     <h1>Will you be my Valentine? ❤️</h1>
 
-    <div class="valentine-image">
-      <img src="baby.jpg" alt="Cute surprise" />
+    <div class="valentine-image" id="heroWrap">
+      <img id="heroImg" src="baby.jpg" alt="Cute surprise" />
     </div>
     
 
@@ -271,6 +271,15 @@
 
     yesBtn.addEventListener('click', () => {
       makeConfetti();
+      // Swap the image on YES
+      const heroImg = document.getElementById('heroImg');
+      const heroWrap = document.getElementById('heroWrap');
+      if (heroImg && heroWrap) {
+        heroImg.src = 'trekking.jpg';
+        heroImg.alt = 'Our adventures 💚';
+        heroWrap.classList.add('big');
+      }
+
       showMessage(`
         <strong>Yay!!!</strong> 🥰<br><br>
         Okay it’s Fixed — you’re my forever Valentine 💖<br>
@@ -388,7 +397,6 @@ window.addEventListener("load", () => {
   </script>
 </body>
 </html>
-
 
 
 
