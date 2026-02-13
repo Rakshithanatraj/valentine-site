@@ -186,7 +186,7 @@
 <body>
 
   <audio id="bgm"  preload="auto" loop playsinline>
-  <source src="song.mp3" type="audio/mp3">
+  <source src="Munbe_Vaa_first_30_seconds.mp3" type="audio/mpeg">
 </audio>
   <!-- Hearts -->
   <script>
@@ -209,7 +209,7 @@
 
     <div class="badge">💌 <span id="toName">Hey you</span>… I have a question</div>
 
-    <h1>Will you be my Valentine Sakshath? ❤️</h1>
+    <h1>Will you be my Valentine? ❤️</h1>
 
     <div class="valentine-image">
       <img src="baby.jpg" alt="Cute surprise" />
@@ -342,17 +342,18 @@ noBtn.addEventListener("click", (e) => {
   e.preventDefault();
   moveNoButton();
 });
-
-    copyLink.addEventListener('click', async (e) => {
-      e.preventDefault();
-      try{
-        await navigator.clipboard.writeText(location.href);
-        showMessage("Link copied ✅ Now paste it into your email 💌");
-      }catch{
-        showMessage("Couldn’t auto-copy on this browser 😅 Just copy from the address bar.");
-      }
-    });
-
+    if (copyLink) {
+      
+          if (copyLink) copyLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try{
+              await navigator.clipboard.writeText(location.href);
+              showMessage("Link copied ✅ Now paste it into your email 💌");
+            }catch{
+              showMessage("Couldn’t auto-copy on this browser 😅 Just copy from the address bar.");
+            }
+          });
+    }
 // ------------------------------
 // Start music on first touch/click
 // ------------------------------
