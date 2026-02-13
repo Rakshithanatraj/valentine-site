@@ -198,6 +198,10 @@
     }
   </script>
 
+  <audio id="bgm" loop>
+  <source src="song.mp3" type="audio/mp3">
+</audio>
+
   <div class="card" id="card">
     <div class="confetti" id="confetti"></div>
 
@@ -267,7 +271,7 @@
       makeConfetti();
       showMessage(`
         <strong>Yay!!!</strong> 🥰<br><br>
-        Okay it’s official — you’re my Valentine 💖<br>
+        Okay it’s Fixed — you’re my forever Valentine 💖<br>
         <em>Tell me when you’re free and I’ll plan something special.</em>
       `);
     });
@@ -346,9 +350,40 @@ noBtn.addEventListener("click", (e) => {
         showMessage("Couldn’t auto-copy on this browser 😅 Just copy from the address bar.");
       }
     });
+
+// ------------------------------
+// Start music on first touch/click
+// ------------------------------
+
+const audio = document.getElementById("bgm");
+
+function startMusicOnce() {
+  audio.volume = 0;  // start silent for smooth fade
+  audio.play().then(() => {
+    // soft fade in
+    let fade = setInterval(() => {
+      if (audio.volume < 0.5) {
+        audio.volume += 0.02;
+      } else {
+        clearInterval(fade);
+      }
+    }, 200);
+  }).catch(() => {});
+
+  // Remove listeners so it only plays once
+  document.removeEventListener("click", startMusicOnce);
+  document.removeEventListener("touchstart", startMusicOnce);
+}
+
+// Listen for first interaction
+document.addEventListener("click", startMusicOnce);
+document.addEventListener("touchstart", startMusicOnce);
+
+    
   </script>
 </body>
 </html>
+
 
 
 
