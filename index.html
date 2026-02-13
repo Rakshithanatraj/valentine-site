@@ -55,6 +55,7 @@
     }
 
     .card{
+      position: relative; /* IMPORTANT: allows the NO button to move within the card */
       width:min(560px, 100%);
       background: var(--card);
       backdrop-filter: blur(10px);
@@ -62,8 +63,9 @@
       border-radius: 24px;
       padding: 28px;
       box-shadow: 0 20px 60px rgba(0,0,0,.12);
-      position:relative;
+      overflow: hidden;
     }
+
     .badge{
       display:inline-flex;
       gap:8px;
@@ -87,6 +89,8 @@
       flex-wrap:wrap;
       margin-top:18px;
       align-items:center;
+      position: relative;
+      min-height: 54px; /* keeps layout stable even when NO becomes absolute */
     }
     button{
       border:0;
@@ -96,6 +100,7 @@
       cursor:pointer;
       transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
       user-select:none;
+      touch-action: manipulation;
     }
     button:active{ transform: translateY(1px); }
     .yes{
@@ -103,12 +108,15 @@
       color:white;
       box-shadow: 0 10px 24px rgba(255,45,111,.35);
       min-width: 140px;
+      z-index: 2;
     }
     .yes:hover{ box-shadow: 0 14px 34px rgba(255,45,111,.45); }
     .no{
       background:#fff;
       border:1px solid #00000014;
       color:#333;
+      min-width: 120px;
+      z-index: 2;
     }
     .no:hover{ background:#fff7fa; }
 
@@ -189,7 +197,7 @@
       I made you this tiny page because asking you like this felt more fun.
     </p>
 
-    <div class="row">
+    <div class="row" id="btnRow">
       <button class="yes" id="yesBtn">Yes 😍</button>
       <button class="no" id="noBtn">No 🙈</button>
     </div>
@@ -214,6 +222,8 @@
     const conf   = document.getElementById('confetti');
     const toName = document.getElementById('toName');
     const copyLink = document.getElementById('copyLink');
+    const card = document.getElementById('card');
+    const btnRow = document.getElementById('btnRow');
 
     // Personalize via URL: ?name=Rahul
     const params = new URLSearchParams(location.search);
@@ -240,7 +250,6 @@
         piece.style.height = (10 + Math.random()*14) + 'px';
         conf.appendChild(piece);
       }
-      // auto-hide after a bit
       setTimeout(()=> conf.style.display='none', 2500);
     }
 
@@ -253,21 +262,64 @@
       `);
     });
 
-    const noLines = [
-      "Are you sure? 🥺",
-      "Think again… I brought snacks 😄",
-      "Okay but what if I ask with extra love? 💗",
-      "Plot twist: the 'No' button is shy 🙈"
-    ];
-    let noCount = 0;
+    // ------------------------------
+    // NO button runs away (desktop + mobile)
+    // ------------------------------
+    // Start the NO button at its current spot, then switch to absolute positioning.
+    function initNoButtonPosition(){
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
 
-    noBtn.addEventListener('click', () => {
-      noCount++;
-      const line = noLines[Math.min(noCount-1, noLines.length-1)];
-      showMessage(`${line}<br><br>(Try pressing <strong>Yes</strong> 😌)`);
-      // playful: make YES button slightly bigger each time
-      const scale = 1 + Math.min(noCount*0.08, 0.45);
-      yesBtn.style.transform = `scale(${scale})`;
+      const left = btnRect.left - cardRect.left;
+      const top  = btnRect.top  - cardRect.top;
+
+      noBtn.style.position = "absolute";
+      noBtn.style.left = left + "px";
+      noBtn.style.top  = top  + "px";
+    }
+
+    function moveNoButton(){
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      // Keep it comfortably inside (extra padding helps on mobile)
+      const padX = 18;
+      const padY = 22;
+
+      const maxX = Math.max(padX, cardRect.width  - btnRect.width  - padX);
+      const maxY = Math.max(padY, cardRect.height - btnRect.height - padY);
+
+      const randomX = padX + Math.random() * (maxX - padX);
+      const randomY = padY + Math.random() * (maxY - padY);
+
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top  = randomY + "px";
+
+      // Optional: tease message once in a while
+      showMessage(`Nice try 😌<br><br>(There’s only one correct answer: <strong>Yes</strong> 💗)`);
+    }
+
+    // Initialize after layout paints
+    window.addEventListener('load', () => {
+      initNoButtonPosition();
+    });
+
+    // Desktop: runs on hover
+    noBtn.addEventListener("mouseenter", (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    // Mobile: runs on touch
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault(); // prevents the click from registering
+      moveNoButton();
+    }, {passive:false});
+
+    // Safety: runs on click too
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      moveNoButton();
     });
 
     copyLink.addEventListener('click', async (e) => {
